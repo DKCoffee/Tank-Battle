@@ -13,6 +13,22 @@ public class PlayerScript : MonoBehaviour {
     private float movementInputValue;
     private float turnInputValue;
 
+    [Header("Machine Gun Settings")]
+    public float machineGunBulletSpeed;
+    public GameObject machineGunBulletPrefab;
+    public Transform machineGunBulletSpawn;
+    public int FireRate;
+    public int lastfired;
+
+    [Header("Canon Settings")]
+    public float canonBulletSpeed;
+    public GameObject canonBulletPrefab;
+    public Transform canonBulletSpawn;
+    private float lastTimeShoot;
+    public float timeToShoot;
+
+
+
     void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -38,12 +54,20 @@ public class PlayerScript : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetJoystickNames().Length > 0)
+        if (Input.GetButtonDown("Fire1"))
         {
-            
+            CanonShoot();
+        }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            StartCoroutine("AutomaticShoot");
+        }
+        if (Input.GetButtonUp("Fire2"))
+        {
+            StopCoroutine("AutomaticShoot");
         }
         movementInputValue = Input.GetAxis(movementAxisName);
-            turnInputValue = Input.GetAxis(turnAxisName);
+        turnInputValue = Input.GetAxis(turnAxisName);
         Turn();
         Move();
     }
@@ -56,11 +80,35 @@ public class PlayerScript : MonoBehaviour {
 
     private void Turn()
     {
-    transform.Rotate(-Vector3.forward* turnInputValue * turnSpeed* Time.deltaTime);
+        transform.Rotate(-Vector3.forward * turnInputValue * turnSpeed * Time.deltaTime);
     }
 
-    private void JoystickControls()
+    private void MachineGunShoot()
     {
-
+            GameObject Snowball = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
+            Snowball.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
+            Destroy(Snowball, 2);
+    }
+    private void CanonShoot()
+    {
+        if (Time.realtimeSinceStartup - lastTimeShoot > timeToShoot)
+        {
+            GameObject Bullet = Instantiate(canonBulletPrefab, canonBulletSpawn.position, canonBulletSpawn.rotation);
+            Bullet.GetComponent<Rigidbody2D>().velocity = canonBulletSpawn.up * canonBulletSpeed;
+            Destroy(Bullet, 5);
+            lastTimeShoot = Time.realtimeSinceStartup;
+        }
+    }
+    IEnumerator AutomaticShoot()
+    {
+        while (true)
+        {
+            MachineGunShoot();
+            yield return new WaitForSeconds(0.1f);
+            MachineGunShoot();
+            yield return new WaitForSeconds(0.1f);
+            MachineGunShoot();
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }
