@@ -5,6 +5,8 @@ using UnityEngine;
 public class TourelleRotationScript : MonoBehaviour {
 
     [SerializeField] private Transform player;
+    [SerializeField] private Transform emptyObject;
+    Vector2 direction;
 
 	// Use this for initialization
 	void Start () {
@@ -23,7 +25,11 @@ public class TourelleRotationScript : MonoBehaviour {
         //Vector3 dir = Input.mousePosition - pos1;
         //float angle1 = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         //transform.rotation = Quaternion.AngleAxis(angle1, Vector3.forward);
+        Debug.Log(direction);
         transform.position = player.position;
         transform.rotation = Quaternion.LookRotation(Vector3.forward, Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position) - transform.position);
+        direction = emptyObject.position - player.position;
+        var hit = Physics2D.Raycast(player.position, transform.forward, 5f, 0);
+        Debug.DrawRay(player.position, direction, Color.magenta, 0.1f);
     }
 }

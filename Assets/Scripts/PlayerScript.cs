@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour {
 
     private Rigidbody2D body;
+    [SerializeField]private Transform emptyObject;
+    private Vector2 direction;
     public float speed;
     public float turnSpeed;
 
@@ -70,6 +72,9 @@ public class PlayerScript : MonoBehaviour {
         turnInputValue = Input.GetAxis(turnAxisName);
         Turn();
         Move();
+        direction = emptyObject.position - transform.position;
+        var hit = Physics2D.Raycast(transform.forward, direction, 5f, 0);
+        Debug.DrawRay(transform.forward, direction, Color.yellow, 0.1f);
     }
 
     private void Move()

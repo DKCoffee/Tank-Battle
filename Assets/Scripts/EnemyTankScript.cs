@@ -58,6 +58,8 @@ public class EnemyTankScript : MonoBehaviour {
         {
             enemyState = EnemyState.ATTACK;
         }
+        var hit = Physics2D.Raycast(transform.position, transform.forward, 5f, 0);
+        Debug.DrawRay(transform.position, transform.forward, Color.green, 0.1f);
     }
 
     private void Move()
