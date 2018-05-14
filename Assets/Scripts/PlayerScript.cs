@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class PlayerScript : MonoBehaviour {
+public class PlayerScript : MonoBehaviour
+{
 
     private Rigidbody2D body;
-    [SerializeField]private Transform emptyObject;
+    [SerializeField] private Transform emptyObject;
     private Vector2 direction;
     public float speed;
     public float turnSpeed;
@@ -29,7 +31,9 @@ public class PlayerScript : MonoBehaviour {
     private float lastTimeShoot;
     public float timeToShoot;
 
-
+    [Header("Health Settings")]
+    public float healthPoints;
+    private float maxHealthPoints = 100;
 
     void Awake()
     {
@@ -52,6 +56,7 @@ public class PlayerScript : MonoBehaviour {
     {
         movementAxisName = "Vertical";
         turnAxisName = "Horizontal";
+        healthPoints = maxHealthPoints;
     }
 
     void Update()
@@ -90,10 +95,11 @@ public class PlayerScript : MonoBehaviour {
 
     private void MachineGunShoot()
     {
-            GameObject Snowball = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
-            Snowball.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
-            Destroy(Snowball, 2);
+        GameObject Snowball = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
+        Snowball.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
+        Destroy(Snowball, 2);
     }
+
     private void CanonShoot()
     {
         if (Time.realtimeSinceStartup - lastTimeShoot > timeToShoot)
@@ -114,6 +120,43 @@ public class PlayerScript : MonoBehaviour {
             yield return new WaitForSeconds(0.1f);
             MachineGunShoot();
             yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private void TotalDamage()
+    {
+        if(healthPoints <= 0)
+        {
+            healthPoints = 0;
+            SceneManager.LoadScene("LooseMenu");
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "EnemyTank")
+        {
+            healthPoints = healthPoints - 1;
+        }
+
+        if (collision.gameObject.tag == "Tree")
+        {
+            healthPoints = healthPoints - 1;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "EnemyCanonBullet")
+        {
+            healthPoints = healthPoints - 25;
+            Destroy(collision.gameObject);
+        }
+
+        if (collision.gameObject.tag == "EnemyHelicopterBullet")
+        {
+            healthPoints = healthPoints - 5;
+            Destroy(collision.gameObject);
         }
     }
 }

@@ -23,6 +23,10 @@ public class EnemyTankScript : MonoBehaviour {
     private float lastTimeShoot;
     public float timeToShoot;
 
+    [Header("Health Settings")]
+    public float healthPoints;
+    private float maxHealthPoints = 100;
+
     public enum EnemyState
     {
         PATROL,
@@ -43,12 +47,13 @@ public class EnemyTankScript : MonoBehaviour {
     {
         body = GetComponent<Rigidbody2D>();
         playerTransform = FindObjectOfType<PlayerScript>().transform;
+        healthPoints = maxHealthPoints;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-
+        Debug.Log("tank " + healthPoints);
         distance = Vector2.Distance(transform.position, playerTransform.transform.position);
         if (distance <= 10)
         {
@@ -123,6 +128,38 @@ public class EnemyTankScript : MonoBehaviour {
             case EnemyState.GO_BACK:
 
                 break;
+        }
+    }
+
+    private void TotalDamage()
+    {
+        if (healthPoints <= 0)
+        {
+            healthPoints = 0;
+            
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            healthPoints = healthPoints - 1;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "PlayerCanonBullet")
+        {
+            healthPoints = healthPoints - 50;
+            Destroy(collision.gameObject);
+        }
+
+        if (collision.gameObject.tag == "PlayerMachineGunBullet")
+        {
+            healthPoints = healthPoints - 2;
+            Destroy(collision.gameObject);
         }
     }
 }

@@ -25,7 +25,8 @@ public class TourelleRotationScript : MonoBehaviour {
         //Vector3 dir = Input.mousePosition - pos1;
         //float angle1 = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         //transform.rotation = Quaternion.AngleAxis(angle1, Vector3.forward);
-        Debug.Log(direction);
+
+        //Debug.Log(direction);
         transform.position = player.position;
         transform.rotation = Quaternion.LookRotation(Vector3.forward, Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position) - transform.position);
         direction = emptyObject.position - player.position;
