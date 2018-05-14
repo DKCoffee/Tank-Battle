@@ -15,6 +15,15 @@ public class MapGenerator : MonoBehaviour
 
     int[,] map;
 
+    public enum TileType
+    {
+        Tree, Floor,
+    }
+
+    public GameObject[] floorTiles;
+    public GameObject[] TreeTiles;
+    private TileType[][] tiles;
+
     void Start()
     {
         GenerateMap();
@@ -91,6 +100,42 @@ public class MapGenerator : MonoBehaviour
 
         return wallCount;
     }
+
+    void InstantiateTiles()
+    {
+        // Go through all the tiles in the jagged array...
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            for (int j = 0; j < tiles[i].Length; j++)
+            {
+                // ... and instantiate a floor tile for it.
+                InstantiateFromArray(floorTiles, i, j);
+
+                // If the tile type is Wall...
+                if (tiles[i][j] == TileType.Tree)
+                {
+                    // ... instantiate a wall over the top.
+                    InstantiateFromArray(TreeTiles, i, j);
+                }
+            }
+        }
+    }
+
+    void InstantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord)
+    {
+        // Create a random index for the array.
+        int randomIndex = Random.Range(0, prefabs.Length);
+
+        // The position to be instantiated at is based on the coordinates.
+        Vector3 position = new Vector3(xCoord, yCoord, 0f);
+
+        // Create an instance of the prefab from the random index of the array.
+        GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.identity) as GameObject;
+
+        // Set the tile's parent to the board holder.
+        tileInstance.transform.parent = boardHolder.transform;
+    }
+
 
 
     void OnDrawGizmos()
