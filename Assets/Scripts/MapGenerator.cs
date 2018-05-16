@@ -19,13 +19,26 @@ public class MapGenerator : MonoBehaviour
     {
         Tree, Floor,
     }
-    private GameObject[,] Generaredmap;
+    private GameObject[,] generared_map;
     [SerializeField] public GameObject floorTiles;
     [SerializeField] public GameObject TreeTiles;
     [SerializeField] public GameObject player;
     [SerializeField] public GameObject enemyTank;
     [SerializeField] public GameObject helicopter;
     private TileType[][] tiles;
+
+    public GameObject[,] Generared_map
+    {
+        get
+        {
+            return generared_map;
+        }
+
+        set
+        {
+            generared_map = value;
+        }
+    }
 
     void Start()
     {
@@ -34,7 +47,7 @@ public class MapGenerator : MonoBehaviour
 
     void GenerateMap()
     {
-        Generaredmap = new GameObject[width, height];
+        Generared_map = new GameObject[width, height];
         map = new int[width, height];
         RandomFillMap();
 
@@ -46,12 +59,12 @@ public class MapGenerator : MonoBehaviour
         {
             for(int y = 0; y < height; y++)
             {
-                Generaredmap[x, y] = Instantiate(floorTiles, new Vector2(x, y), Quaternion.identity);
+                Generared_map[x, y] = Instantiate(floorTiles, new Vector2(x - width / 2 , y - height / 2), Quaternion.identity);
                 
                 if (map[x,y] == 1)
                 {
 
-                    Generaredmap[x,y] = Instantiate(TreeTiles, new Vector2(x,y),Quaternion.identity);
+                    Generared_map[x,y] = Instantiate(TreeTiles, new Vector2(x - width / 2, y - height / 2),Quaternion.identity);
                 }
                 //if(map[x,y] == 0)
                 //{
