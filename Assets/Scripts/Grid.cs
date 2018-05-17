@@ -107,6 +107,7 @@ public class Grid : MonoBehaviour {
                 NeighboringNodes.Add(grid[xCheck, yCheck]);
             }
         }
+        return NeighboringNodes;
     }
 
     private void OnDrawGizmos()

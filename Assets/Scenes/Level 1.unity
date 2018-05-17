@@ -113,83 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &102648177
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 102648178}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &102648178
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 102648177}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 285649655}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &170332287
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4513761083792082, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4513761083792082, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4513761083792082, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4513761083792082, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4513761083792082, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4513761083792082, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4513761083792082, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4513761083792082, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114883014370208174, guid: 383bd979dd6c9bd4b87d60b6690f4dff,
-        type: 2}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 1054603228670178, guid: d84ed4629e1c1284386440666715042b,
-        type: 2}
-    m_RemovedComponents:
-    - {fileID: 114883014370208174, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-  m_ParentPrefab: {fileID: 100100000, guid: 383bd979dd6c9bd4b87d60b6690f4dff, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &285649653
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +123,7 @@ GameObject:
   - component: {fileID: 285649655}
   - component: {fileID: 285649656}
   - component: {fileID: 285649654}
+  - component: {fileID: 285649657}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -218,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c1dbab77bd3b1479480b1af3ca78ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartPosition: {fileID: 102648178}
+  StartPosition: {fileID: 0}
   TreeMask:
     serializedVersion: 2
     m_Bits: 256
@@ -235,10 +159,9 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.5, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 102648178}
+  m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &285649656
 MonoBehaviour:
@@ -253,14 +176,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 20
   height: 20
-  seed: 
+  seed: 10
   useRandomSeed: 1
   randomFillPercent: 35
   floorTiles: {fileID: 1707387910434750, guid: f704b4abec090204296b8fa7d3168a9d, type: 2}
   TreeTiles: {fileID: 1919354996672940, guid: 3f766ba790d5bf04d98209f8b13c0267, type: 2}
   player: {fileID: 1054603228670178, guid: d84ed4629e1c1284386440666715042b, type: 2}
-  enemyTank: {fileID: 0}
+--- !u!114 &285649657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 285649653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e8e9ebd6b810eb4a8a587eb2abdcd6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyTank: {fileID: 1070493426187782, guid: 8913b8369768ea1458315167190768f0, type: 2}
   helicopter: {fileID: 0}
+  grid: {fileID: 285649654}
+  map_generator: {fileID: 285649656}
+  player: {fileID: 4283491110221362, guid: d84ed4629e1c1284386440666715042b, type: 2}
+  gridSizeX: 20
+  gridSizeY: 20
 --- !u!1 &470854615
 GameObject:
   m_ObjectHideFlags: 0

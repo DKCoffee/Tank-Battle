@@ -23,8 +23,6 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] public GameObject floorTiles;
     [SerializeField] public GameObject TreeTiles;
     [SerializeField] public GameObject player;
-    [SerializeField] public GameObject enemyTank;
-    [SerializeField] public GameObject helicopter;
     private TileType[][] tiles;
 
     public GameObject[,] Generared_map
@@ -40,10 +38,27 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    void Start()
+    void Awake()
     {
         GenerateMap();
+
     }
+
+    //float PercentOfGround()
+    //{
+    //    int number_Ground = 0;
+    //    for (int y = 0; y < height; y++)
+    //    {
+    //        for (int x = 0; x < width; x++)
+    //        {
+    //            if (this.generared_map[x, y].layer != 8)
+    //            {
+    //                number_Ground++;
+    //            }
+    //        }
+    //    }
+    //    return (float)number_Ground / (height * width) * 100;
+    //}
 
     void GenerateMap()
     {
@@ -51,7 +66,7 @@ public class MapGenerator : MonoBehaviour
         map = new int[width, height];
         RandomFillMap();
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 8; i++)
         {
             SmoothMap();
         }
@@ -72,7 +87,7 @@ public class MapGenerator : MonoBehaviour
                 //}
             }
         }
-        Instantiate(player, new Vector2(0, 0), Quaternion.identity);
+        Instantiate(player, new Vector2(-width/2+1,-height/2+1), Quaternion.identity);
     }
 
 
@@ -80,7 +95,7 @@ public class MapGenerator : MonoBehaviour
     {
         if (useRandomSeed)
         {
-            seed = Time.time.ToString();
+            seed = DateTime.Now.Ticks.ToString();
         }
 
         System.Random pseudoRandom = new System.Random(seed.GetHashCode());
@@ -143,55 +158,4 @@ public class MapGenerator : MonoBehaviour
 
         return wallCount;
     }
-
-    //void InstantiateTiles()
-    //{
-    //    // Go through all the tiles in the jagged array...
-    //    for (int i = 0; i < tiles.Length; i++)
-    //    {
-    //        for (int j = 0; j < tiles[i].Length; j++)
-    //        {
-    //            // ... and instantiate a floor tile for it.
-    //            InstantiateFromArray(floorTiles, i, j);
-
-    //            // If the tile type is Wall...
-    //            if (tiles[i][j] == TileType.Tree)
-    //            {
-    //                // ... instantiate a wall over the top.
-    //                InstantiateFromArray(TreeTiles, i, j);
-    //            }
-    //        }
-    //    }
-    //}
-
-    //void InstantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord)
-    //{
-    //    // Create a random index for the array.
-    //    int randomIndex = Random.Range(0, prefabs.Length);
-
-    //    // The position to be instantiated at is based on the coordinates.
-    //    Vector3 position = new Vector3(xCoord, yCoord, 0f);
-
-    //    // Create an instance of the prefab from the random index of the array.
-    //    GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.identity) as GameObject;
-
-    //    // Set the tile's parent to the board holder.
-    //    tileInstance.transform.parent = boardHolder.transform;
-    //}
-
-
-
-    //    void OnDrawGizmos()
-    //    {
-    //        if (map != null)
-    //        {
-    //            for (int x = 0; x < width; x++) {
-    //                for (int y = 0; y < height; y++) {
-    //                    Gizmos.color = (map[x,y] == 1) ? Color.black:Color.white;
-    //                    Vector3 pos = new Vector3(-width / 2 + x + .5f, -height / 2 + y + .5f, 0);
-    //                    Gizmos.DrawCube(pos, Vector3.one);
-    //                }
-    //            }
-    //        }
-    //    }
 }
