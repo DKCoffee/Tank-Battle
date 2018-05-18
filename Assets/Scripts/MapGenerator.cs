@@ -40,7 +40,10 @@ public class MapGenerator : MonoBehaviour
 
     void Awake()
     {
-        GenerateMap();
+        //do
+        //{
+            GenerateMap();
+        //} while (PercentOfGround() >= 50);
 
     }
 

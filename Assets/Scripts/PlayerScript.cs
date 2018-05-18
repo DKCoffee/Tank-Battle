@@ -95,9 +95,9 @@ public class PlayerScript : MonoBehaviour
 
     private void MachineGunShoot()
     {
-        GameObject Snowball = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
-        Snowball.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
-        Destroy(Snowball, 2);
+        GameObject Bullet = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
+        Bullet.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
+        Destroy(Bullet, 2);
     }
 
     private void CanonShoot()
