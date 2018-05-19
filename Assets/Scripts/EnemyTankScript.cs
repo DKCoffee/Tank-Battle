@@ -1,4 +1,4 @@
-﻿using System;
+﻿//using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,13 +8,15 @@ public class EnemyTankScript : MonoBehaviour {
     private Rigidbody2D body;
     public float speed;
     public float turnSpeed;
+    private SpriteRenderer spriteRenderer;
+    private Pathfinding pathfinding;
+    private Vector3 startPosition;
+    private Vector3 targetPosition;
+    [SerializeField] public MapGenerator map_generator;
+    [SerializeField] public GameObject waypoint;
+    private float maximumSpawnDistance = 5;
+    [SerializeField] int gridSizeX, gridSizeY;
 
-    [Header("Machine Gun Settings")]
-    public float machineGunBulletSpeed;
-    public GameObject machineGunBulletPrefab;
-    public Transform machineGunBulletSpawn;
-    public int FireRate;
-    public int lastfired;
 
     [Header("Canon Settings")]
     public float canonBulletSpeed;
@@ -41,19 +43,22 @@ public class EnemyTankScript : MonoBehaviour {
     private Transform playerTransform;
     private float originOffset = 0.5f;
     public float raycastMaxDistance = 10f;
+    private EnemyTourelleScript enemyTourelleScript;
 
     // Use this for initialization
     void Start ()
     {
         body = GetComponent<Rigidbody2D>();
         playerTransform = FindObjectOfType<PlayerScript>().transform;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        enemyTourelleScript = FindObjectOfType<EnemyTourelleScript>();
         healthPoints = maxHealthPoints;
+        GenerateWaypoints(4);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        Debug.Log("tank " + healthPoints);
         distance = Vector2.Distance(transform.position, playerTransform.transform.position);
         if (distance <= 10)
         {
@@ -65,37 +70,21 @@ public class EnemyTankScript : MonoBehaviour {
         }
         var hit = Physics2D.Raycast(transform.position, transform.forward, 5f, 0);
         Debug.DrawRay(transform.position, transform.forward, Color.green, 0.1f);
+        TotalDamage();
+        Move();
     }
 
     private void Move()
     {
-        Vector2 movement = transform.up * speed * Time.deltaTime;
-        body.MovePosition(body.position + movement);
+        transform.position += transform.up * speed * Time.deltaTime;
+        Vector3 dir = playerTransform.position - transform.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward); ;
     }
 
     private void Turn()
     {
         transform.Rotate(-Vector3.forward * turnSpeed * Time.deltaTime);
-    }
-
-    private void MachineGunShoot()
-    {
-        GameObject Snowball = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
-        Snowball.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
-        Destroy(Snowball, 2);
-    }
-
-    IEnumerator AutomaticShoot()
-    {
-        while (true)
-        {
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
-        }
     }
 
         private void CanonShoot()
@@ -131,12 +120,40 @@ public class EnemyTankScript : MonoBehaviour {
         }
     }
 
+    private void GenerateWaypoints(int waypoints)
+    {
+        int CountEnemy = 0;
+        while (CountEnemy != waypoints)
+        {
+            GameObject[,] generared_map = map_generator.Generared_map;
+
+            int _x = Mathf.RoundToInt((9646 * Random.value + 5947) % (gridSizeX - 1));
+            int _y = Mathf.RoundToInt((9646 * Random.value + 5947) % (gridSizeY - 1));
+            if (generared_map[_x, _y].layer != 8)//CHIFFRE MAGIQUE
+            {
+                float distance = Vector3.Distance(transform.position, generared_map[_x, _y].transform.position);
+
+                if (distance <= maximumSpawnDistance)
+                {
+                    if (CountEnemy != waypoints)
+                    {
+                        Instantiate(waypoint, generared_map[_x, _y].transform.position, Quaternion.identity);
+                        CountEnemy++;
+                    }
+
+                }
+            }
+        }
+    }
+
     private void TotalDamage()
     {
         if (healthPoints <= 0)
         {
             healthPoints = 0;
-            
+            GetComponent<SpriteRenderer>().color = Color.grey;
+            Destroy(GetComponent<BoxCollider>());
+            enemyTourelleScript.TotalDamage();
         }
     }
 

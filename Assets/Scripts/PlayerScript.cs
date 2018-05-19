@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using EZCameraShake;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerScript : MonoBehaviour
     private Vector2 direction;
     public float speed;
     public float turnSpeed;
+    private SpriteRenderer spriteRenderer;
 
     private string movementAxisName;
     private string turnAxisName;
@@ -57,6 +59,7 @@ public class PlayerScript : MonoBehaviour
         movementAxisName = "Vertical";
         turnAxisName = "Horizontal";
         healthPoints = maxHealthPoints;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -98,6 +101,7 @@ public class PlayerScript : MonoBehaviour
         GameObject Bullet = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
         Bullet.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
         Destroy(Bullet, 2);
+        CameraShaker.Instance.ShakeOnce(.5f, 1f, .1f, 1f);
     }
 
     private void CanonShoot()
@@ -108,6 +112,7 @@ public class PlayerScript : MonoBehaviour
             Bullet.GetComponent<Rigidbody2D>().velocity = canonBulletSpawn.up * canonBulletSpeed;
             Destroy(Bullet, 5);
             lastTimeShoot = Time.realtimeSinceStartup;
+            CameraShaker.Instance.ShakeOnce(4f, 4f, .1f, 1f);
         }
     }
     IEnumerator AutomaticShoot()
@@ -121,6 +126,36 @@ public class PlayerScript : MonoBehaviour
             MachineGunShoot();
             yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    private IEnumerator HeavyDamage()
+    {
+
+        yield return new WaitForSeconds(.1f);
+        for (int i = 0; i < 3; i++)
+        {
+            GetComponent<SpriteRenderer>().color = Color.clear;
+            yield return new WaitForSeconds(.1f);
+            GetComponent<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(.1f);
+            GetComponent<SpriteRenderer>().color = Color.white;
+            yield return new WaitForSeconds(.1f);
+        }
+
+    }
+
+    private IEnumerator SmallDamage()
+    {
+
+        yield return new WaitForSeconds(.1f);
+        for (int i = 0; i < 2; i++)
+        {
+            GetComponent<SpriteRenderer>().color = Color.clear;
+            yield return new WaitForSeconds(.1f);
+            GetComponent<SpriteRenderer>().color = Color.white;
+            yield return new WaitForSeconds(.1f);
+        }
+
     }
 
     private void TotalDamage()
@@ -137,11 +172,15 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.tag == "EnemyTank")
         {
             healthPoints = healthPoints - 1;
+            StartCoroutine(SmallDamage());
+            CameraShaker.Instance.ShakeOnce(2f, 2f, .1f, 1f);
         }
 
         if (collision.gameObject.tag == "Tree")
         {
             healthPoints = healthPoints - 1;
+            StartCoroutine(SmallDamage());
+            CameraShaker.Instance.ShakeOnce(2f, 2f, .1f, 1f);
         }
     }
 
@@ -150,13 +189,17 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.tag == "EnemyCanonBullet")
         {
             healthPoints = healthPoints - 25;
+            StartCoroutine(HeavyDamage());
             Destroy(collision.gameObject);
+            CameraShaker.Instance.ShakeOnce(5f, 5f, .1f, 1f);
         }
 
         if (collision.gameObject.tag == "EnemyHelicopterBullet")
         {
             healthPoints = healthPoints - 5;
+            StartCoroutine(HeavyDamage());
             Destroy(collision.gameObject);
+            CameraShaker.Instance.ShakeOnce(.5f, .5f, .1f, 1f);
         }
     }
 }

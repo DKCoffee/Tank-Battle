@@ -7,6 +7,7 @@ public class EnemyTourelleScript : MonoBehaviour {
     [SerializeField] private Transform enemyTank;
     [SerializeField] private Transform emptyObject;
     Vector2 direction;
+    
 
     // Use this for initialization
     void Start () {
@@ -21,5 +22,12 @@ public class EnemyTourelleScript : MonoBehaviour {
         direction = emptyObject.position - enemyTank.position;
         var hit = Physics2D.Raycast(enemyTank.position, direction, 5f, 0);
         Debug.DrawRay(enemyTank.position, direction, Color.magenta, 0.1f);
+        
+    }
+
+    public void TotalDamage()
+    {
+            Destroy(gameObject);
+            Destroy(this);
     }
 }

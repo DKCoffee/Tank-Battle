@@ -6,6 +6,7 @@ public class EnemiesGenerator : MonoBehaviour {
 
     [SerializeField] public GameObject enemyTank;
     [SerializeField] public GameObject helicopter;
+    [SerializeField] public GameObject waypoint;
     [SerializeField] public Grid grid;
     [SerializeField] public MapGenerator map_generator;
     [SerializeField] private Transform player;
@@ -13,11 +14,12 @@ public class EnemiesGenerator : MonoBehaviour {
     [SerializeField] int gridSizeX, gridSizeY;
 
     private float minimumSpawnDistance = 8;
+    
 
     // Use this for initialization
     void Start () {
         player = FindObjectOfType<PlayerScript>().transform;
-        GenerateTank(2);
+        GenerateTank(1);
     }
 	
 	// Update is called once per frame
