@@ -6,6 +6,9 @@ public class HelicopterScript : MonoBehaviour {
 
     [SerializeField] private GameObject propeller;
     private Transform playerTransform;
+    [SerializeField] private float speed;
+    private Transform startPosition;
+    private Transform target;
 
     [Header("Machine Gun Settings")]
     public float machineGunBulletSpeed;
@@ -32,6 +35,7 @@ public class HelicopterScript : MonoBehaviour {
     {
         playerTransform = FindObjectOfType<PlayerScript>().transform;
         healthPoints = maxHealthPoints;
+        startPosition = transform;
 	}
 	
 	// Update is called once per frame
@@ -39,6 +43,8 @@ public class HelicopterScript : MonoBehaviour {
     {
         Debug.Log("helicopter " + healthPoints);
         propeller.transform.Rotate(0, 0, 2000 * Time.deltaTime);
+        Move();
+        MachineGunShoot();
     }
 
     private void MachineGunShoot()
@@ -61,6 +67,14 @@ public class HelicopterScript : MonoBehaviour {
         }
     }
 
+    private void Move()
+    {
+        transform.position += transform.up * speed * Time.deltaTime;
+        Vector3 dir = target.position - transform.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+    }
+
     private void AI()
     {
         switch (enemyState)
@@ -69,13 +83,14 @@ public class HelicopterScript : MonoBehaviour {
 
                 break;
             case EnemyState.FOLLOW:
-
+                target = playerTransform;
+                Move();
                 break;
             case EnemyState.ATTACK:
                 StartCoroutine("AutomaticShoot");
                 break;
             case EnemyState.GO_BACK:
-
+                target = startPosition;
                 break;
         }
     }
@@ -85,6 +100,7 @@ public class HelicopterScript : MonoBehaviour {
         if (healthPoints <= 0)
         {
             healthPoints = 0;
+            Destroy(gameObject);
 
         }
     }
@@ -95,12 +111,14 @@ public class HelicopterScript : MonoBehaviour {
         {
             healthPoints = healthPoints - 50;
             Destroy(collision.gameObject);
+            TotalDamage();
         }
 
         if (collision.gameObject.tag == "PlayerMachineGunBullet")
         {
             healthPoints = healthPoints - 5;
             Destroy(collision.gameObject);
+            TotalDamage();
         }
     }
 }

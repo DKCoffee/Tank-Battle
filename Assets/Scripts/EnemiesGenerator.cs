@@ -20,6 +20,7 @@ public class EnemiesGenerator : MonoBehaviour {
     void Start () {
         player = FindObjectOfType<PlayerScript>().transform;
         GenerateTank(1);
+        GenerateHelicopter(1);
     }
 	
 	// Update is called once per frame
@@ -45,7 +46,7 @@ public class EnemiesGenerator : MonoBehaviour {
                             if (CountEnemy != Enemies)
                             {
                                 Debug.Log(_x + " " + _y + " " + generared_map[_x, _y].transform.position);
-                                Instantiate(enemyTank, generared_map[_x, _y].transform.position, Quaternion.identity);
+                                Instantiate(helicopter, generared_map[_x, _y].transform.position, Quaternion.identity);
                                 CountEnemy++;
                             }
 
@@ -64,7 +65,7 @@ public class EnemiesGenerator : MonoBehaviour {
             {
                 for (int x = 0; x < gridSizeX; x++)
                 {
-                    if (generared_map[x, y].layer == 10)//CHIFFRE MAGIQUE
+                    if (generared_map[x, y].layer == 8)//CHIFFRE MAGIQUE
                     {
                         float distance = Vector3.Distance(player.position, generared_map[x, y].transform.position);
 

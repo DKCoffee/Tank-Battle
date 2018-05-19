@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyTank: {fileID: 1070493426187782, guid: 8913b8369768ea1458315167190768f0, type: 2}
-  helicopter: {fileID: 0}
+  helicopter: {fileID: 1528117001213414, guid: cd59a965a31e17643abd1fc05f5fec7e, type: 2}
   waypoint: {fileID: 1696329216150726, guid: 2b3781fda0cc74e4a8f8c6f465ba8bc6, type: 2}
   grid: {fileID: 285649654}
   map_generator: {fileID: 285649656}
