@@ -9,6 +9,7 @@ public class HelicopterScript : MonoBehaviour {
     [SerializeField] private float speed;
     private Transform startPosition;
     private Transform target;
+    private float distance;
 
     [Header("Machine Gun Settings")]
     public float machineGunBulletSpeed;
@@ -20,6 +21,9 @@ public class HelicopterScript : MonoBehaviour {
     [Header("Health Settings")]
     public float healthPoints;
     private float maxHealthPoints = 50;
+
+
+    float roamRadius = 5;
 
     public enum EnemyState
     {
@@ -43,8 +47,12 @@ public class HelicopterScript : MonoBehaviour {
     {
         //Debug.Log("helicopter " + healthPoints);
         propeller.transform.Rotate(0, 0, 2000 * Time.deltaTime);
-        Move();
-        MachineGunShoot();
+        AI();
+        distance = Vector2.Distance(transform.position, playerTransform.transform.position);
+        if(distance <= 5)
+        {
+            enemyState = EnemyState.ATTACK;
+        }
     }
 
     private void MachineGunShoot()
@@ -69,10 +77,30 @@ public class HelicopterScript : MonoBehaviour {
 
     private void Move()
     {
+        target = playerTransform;
         transform.position += transform.up * speed * Time.deltaTime;
         Vector3 dir = target.position - transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+    }
+
+    private void turnAround()
+    {
+
+    }
+
+    void FreeRoam()
+    {
+        {
+            Vector3 randomDirection = Random.insideUnitSphere * roamRadius;
+            randomDirection += startPosition;
+
+            if (!renderer.bounds.Contains(randomDirection + transform.position))
+            {
+                randomDirection = -randomDirection; // if next point outside boundary, do a 180
+            }
+            randomDirection += transform.position;
+        }
     }
 
     private void AI()
@@ -87,7 +115,9 @@ public class HelicopterScript : MonoBehaviour {
                 Move();
                 break;
             case EnemyState.ATTACK:
+                target = playerTransform;
                 StartCoroutine("AutomaticShoot");
+                turnAround();
                 break;
             case EnemyState.GO_BACK:
                 target = startPosition;

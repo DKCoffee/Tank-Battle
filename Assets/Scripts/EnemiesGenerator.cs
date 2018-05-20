@@ -34,51 +34,53 @@ public class EnemiesGenerator : MonoBehaviour {
         {
             GameObject[,] generared_map = map_generator.Generared_map;
 
-            int _x = Mathf.RoundToInt((9646 * Random.value + 5947) % (gridSizeX - 1));
-            int _y = Mathf.RoundToInt((9646 * Random.value + 5947) % (gridSizeY - 1));
-                    if (generared_map[_x, _y].layer != 8)//CHIFFRE MAGIQUE
+            int _x = Mathf.RoundToInt((9633 * Random.value + 4547) % (gridSizeX - 1));
+            int _y = Mathf.RoundToInt((9056 * Random.value + 5567) % (gridSizeY - 1));
+
+            if (generared_map[_x, _y].layer != 8)//CHIFFRE MAGIQUE
+            {
+                float distance = Vector3.Distance(player.position, generared_map[_x, _y].transform.position);
+
+                if (distance >= minimumSpawnDistance)
+                {
+                    if (CountEnemy != Enemies)
                     {
-                        float distance = Vector3.Distance(player.position, generared_map[_x, _y].transform.position);
-
-                        if (distance >= minimumSpawnDistance)
-                        {
-                            if (CountEnemy != Enemies)
-                            {
-                                Debug.Log(_x + " " + _y + " " + generared_map[_x, _y].transform.position);
-                                Instantiate(helicopter, generared_map[_x, _y].transform.position, Quaternion.identity);
-                                CountEnemy++;
-                            }
-
-                        }
+                        Debug.Log(_x + " " + _y + " " + generared_map[_x, _y].transform.position);
+                        Instantiate(enemyTank, generared_map[_x, _y].transform.position, Quaternion.identity);
+                        CountEnemy++;
                     }
+
+                }
+
+            }
         }
     }
 
-    private void GenerateHelicopter(int HelicopterEnemies)
+    private void GenerateHelicopter(int helicopterEnemies)
     {
         int CountEnemy = 0;
-        while (CountEnemy != HelicopterEnemies)
+        while (CountEnemy != helicopterEnemies)
         {
             GameObject[,] generared_map = map_generator.Generared_map;
-            for (int y = 0; y < gridSizeY; y++)
+
+            int _x = Mathf.RoundToInt((9563 * Random.value + 4332) % (gridSizeX - 1));
+            int _y = Mathf.RoundToInt((2256 * Random.value + 8667) % (gridSizeY - 1));
+
+            if (generared_map[_x, _y].layer == 8)//CHIFFRE MAGIQUE
             {
-                for (int x = 0; x < gridSizeX; x++)
+                float distance = Vector3.Distance(player.position, generared_map[_x, _y].transform.position);
+
+                if (distance >= minimumSpawnDistance)
                 {
-                    if (generared_map[x, y].layer == 8)//CHIFFRE MAGIQUE
+                    if (CountEnemy != helicopterEnemies)
                     {
-                        float distance = Vector3.Distance(player.position, generared_map[x, y].transform.position);
-
-                        if (distance >= minimumSpawnDistance)
-                        {
-                            if (CountEnemy != HelicopterEnemies)
-                            {
-                                Instantiate(enemyTank, generared_map[y, x].transform.position, Quaternion.identity);
-                                CountEnemy++;
-                            }
-
-                        }
+                        Debug.Log(_x + " " + _y + " " + generared_map[_x, _y].transform.position);
+                        Instantiate(helicopter, generared_map[_x, _y].transform.position, Quaternion.identity);
+                        CountEnemy++;
                     }
+
                 }
+
             }
         }
     }

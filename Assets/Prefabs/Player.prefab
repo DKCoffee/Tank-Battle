@@ -357,7 +357,7 @@ MonoBehaviour:
   machineGunBulletSpawn: {fileID: 4766295692754480}
   FireRate: 1
   lastfired: 1
-  MunitionBar: {fileID: 1890652664163592, guid: 8735262ab16f4e5448f54df24d8108bc,
+  MunitionBar: {fileID: 1220812752734982, guid: 285d6467408df494a8deebc7be78bc34,
     type: 2}
   canonBulletSpeed: 25
   canonBulletPrefab: {fileID: 1951736735431828, guid: b94f88eecc6100742a9f233f8ba93535,

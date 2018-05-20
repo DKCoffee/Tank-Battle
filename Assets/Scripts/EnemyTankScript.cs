@@ -13,7 +13,6 @@ public class EnemyTankScript : MonoBehaviour {
     private Vector3 startPosition;
     private Vector3 targetPosition;
     [SerializeField] public MapGenerator map_generator;
-    [SerializeField] public GameObject waypoint;
     private float maximumSpawnDistance = 5;
     [SerializeField] int gridSizeX, gridSizeY;
 
@@ -53,7 +52,6 @@ public class EnemyTankScript : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
         enemyTourelleScript = FindObjectOfType<EnemyTourelleScript>();
         healthPoints = maxHealthPoints;
-        GenerateWaypoints(4);
     }
 	
 	// Update is called once per frame
@@ -117,32 +115,6 @@ public class EnemyTankScript : MonoBehaviour {
             case EnemyState.GO_BACK:
 
                 break;
-        }
-    }
-
-    private void GenerateWaypoints(int waypoints)
-    {
-        int CountEnemy = 0;
-        while (CountEnemy != waypoints)
-        {
-            GameObject[,] generared_map = map_generator.Generared_map;
-
-            int _x = Mathf.RoundToInt((9646 * Random.value + 5947) % (gridSizeX - 1));
-            int _y = Mathf.RoundToInt((9646 * Random.value + 5947) % (gridSizeY - 1));
-            if (generared_map[_x, _y].layer != 8)//CHIFFRE MAGIQUE
-            {
-                float distance = Vector3.Distance(transform.position, generared_map[_x, _y].transform.position);
-
-                if (distance <= maximumSpawnDistance)
-                {
-                    if (CountEnemy != waypoints)
-                    {
-                        Instantiate(waypoint, generared_map[_x, _y].transform.position, Quaternion.identity);
-                        CountEnemy++;
-                    }
-
-                }
-            }
         }
     }
 

@@ -91,9 +91,8 @@ public class PlayerScript : MonoBehaviour
         direction = emptyObject.position - transform.position;
         var hit = Physics2D.Raycast(transform.forward, direction, 5f, 0);
         //Debug.DrawRay(transform.forward, direction, Color.yellow, 0.1f);
-        Debug.Log("AMMO " + currentMachineGunMunition);
-        float calculateHealth = currentMachineGunMunition / maxMachineGunMunition;
-        SetHealthBar(calculateHealth);
+        float calculateMunition = currentMachineGunMunition / maxMachineGunMunition;
+        SetHealthBar(calculateMunition);
         if (currentMachineGunMunition <= 0)
         {
             StartCoroutine(MachineGunReloading());
@@ -144,9 +143,9 @@ public class PlayerScript : MonoBehaviour
         
     }
 
-    public void SetHealthBar(float myHealth)
+    public void SetHealthBar(float munition)
     {
-        MunitionBar.transform.localScale = new Vector3(myHealth, MunitionBar.transform.localScale.y, MunitionBar.transform.localScale.z);
+        MunitionBar.transform.localScale = new Vector3(munition, MunitionBar.transform.localScale.y, MunitionBar.transform.localScale.z);
     }
 
     IEnumerator CanonReloading()

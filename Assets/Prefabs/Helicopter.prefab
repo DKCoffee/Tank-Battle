@@ -37,7 +37,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4874383890151914}
   - component: {fileID: 212423237211752818}
-  - component: {fileID: 114023596914158762}
   m_Layer: 0
   m_Name: Helicopter
   m_TagString: Untagged
@@ -168,25 +167,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.75}
   m_Size: {x: 0.8, y: 2}
   m_Direction: 0
---- !u!114 &114023596914158762
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1381784479242078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8de6ea1fdbf464a48a217c39375f0b1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  propeller: {fileID: 1279678267728566}
-  speed: 0
-  machineGunBulletSpeed: 0
-  machineGunBulletPrefab: {fileID: 0}
-  machineGunBulletSpawn: {fileID: 0}
-  FireRate: 0
-  lastfired: 0
-  healthPoints: 0
 --- !u!114 &114088303253644384
 MonoBehaviour:
   m_ObjectHideFlags: 1
