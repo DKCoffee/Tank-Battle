@@ -41,7 +41,7 @@ public class HelicopterScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        Debug.Log("helicopter " + healthPoints);
+        //Debug.Log("helicopter " + healthPoints);
         propeller.transform.Rotate(0, 0, 2000 * Time.deltaTime);
         Move();
         MachineGunShoot();

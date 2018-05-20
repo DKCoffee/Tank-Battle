@@ -25,6 +25,11 @@ public class PlayerScript : MonoBehaviour
     public Transform machineGunBulletSpawn;
     public int FireRate;
     public int lastfired;
+    private float maxMachineGunMunition = 50;
+    private float currentMachineGunMunition;
+    private float machineGunReloadTime = 4;
+    private bool isReloading = false;
+    public GameObject MunitionBar;
 
     [Header("Canon Settings")]
     public float canonBulletSpeed;
@@ -32,6 +37,8 @@ public class PlayerScript : MonoBehaviour
     public Transform canonBulletSpawn;
     private float lastTimeShoot;
     public float timeToShoot;
+    private int canonMunition = 1;
+    private float CanonReloadTime = 3;
 
     [Header("Health Settings")]
     public float healthPoints;
@@ -59,6 +66,7 @@ public class PlayerScript : MonoBehaviour
         movementAxisName = "Vertical";
         turnAxisName = "Horizontal";
         healthPoints = maxHealthPoints;
+        currentMachineGunMunition = maxMachineGunMunition;
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -82,10 +90,19 @@ public class PlayerScript : MonoBehaviour
         Move();
         direction = emptyObject.position - transform.position;
         var hit = Physics2D.Raycast(transform.forward, direction, 5f, 0);
-        Debug.DrawRay(transform.forward, direction, Color.yellow, 0.1f);
+        //Debug.DrawRay(transform.forward, direction, Color.yellow, 0.1f);
+        Debug.Log("AMMO " + currentMachineGunMunition);
+        float calculateHealth = currentMachineGunMunition / maxMachineGunMunition;
+        SetHealthBar(calculateHealth);
+        if (currentMachineGunMunition <= 0)
+        {
+            StartCoroutine(MachineGunReloading());
+            return;
+        }
+
     }
 
-    private void Move()
+        private void Move()
     {
         Vector2 movement = transform.up * movementInputValue * speed * Time.deltaTime;
         body.MovePosition(body.position + movement);
@@ -102,6 +119,7 @@ public class PlayerScript : MonoBehaviour
         Bullet.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
         Destroy(Bullet, 2);
         CameraShaker.Instance.ShakeOnce(.5f, 1f, .1f, 1f);
+        currentMachineGunMunition--;
     }
 
     private void CanonShoot()
@@ -113,18 +131,46 @@ public class PlayerScript : MonoBehaviour
             Destroy(Bullet, 5);
             lastTimeShoot = Time.realtimeSinceStartup;
             CameraShaker.Instance.ShakeOnce(4f, 4f, .1f, 1f);
+            
         }
     }
+
+    IEnumerator MachineGunReloading()
+    {
+        isReloading = true;
+        yield return new WaitForSeconds(machineGunReloadTime);
+        currentMachineGunMunition = maxMachineGunMunition;
+        isReloading = false;
+        
+    }
+
+    public void SetHealthBar(float myHealth)
+    {
+        MunitionBar.transform.localScale = new Vector3(myHealth, MunitionBar.transform.localScale.y, MunitionBar.transform.localScale.z);
+    }
+
+    IEnumerator CanonReloading()
+    {
+        yield return new WaitForSeconds(CanonReloadTime);
+    }
+
     IEnumerator AutomaticShoot()
     {
-        while (true)
+        if (isReloading)
         {
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
+            
+        }
+        else
+        {
+            while (true)
+            {
+                MachineGunShoot();
+                yield return new WaitForSeconds(0.1f);
+                MachineGunShoot();
+                yield return new WaitForSeconds(0.1f);
+                MachineGunShoot();
+                yield return new WaitForSeconds(0.1f);
+            }
         }
     }
 

@@ -6,7 +6,6 @@ public class EnemiesGenerator : MonoBehaviour {
 
     [SerializeField] public GameObject enemyTank;
     [SerializeField] public GameObject helicopter;
-    [SerializeField] public GameObject waypoint;
     [SerializeField] public Grid grid;
     [SerializeField] public MapGenerator map_generator;
     [SerializeField] private Transform player;
