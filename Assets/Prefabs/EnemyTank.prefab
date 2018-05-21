@@ -257,7 +257,7 @@ Rigidbody2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1475469054533512}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -319,19 +319,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f50688604f45f9f46a6d62cc51918545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  turnSpeed: 1
+  speed: 0.5
+  turnSpeed: 2
   map_generator: {fileID: 114883014370208174, guid: 383bd979dd6c9bd4b87d60b6690f4dff,
     type: 2}
   gridSizeX: 20
   gridSizeY: 20
-  canonBulletSpeed: 1
-  canonBulletPrefab: {fileID: 1951736735431828, guid: b94f88eecc6100742a9f233f8ba93535,
+  TotalTank: {fileID: 1070493426187782}
+  ExplosionMark: {fileID: 1211404275234878, guid: b4582a6393572de4aa01c095cc1c6b24,
+    type: 2}
+  canonBulletSpeed: 10
+  canonBulletPrefab: {fileID: 1162822223283088, guid: f8d5613aa9a69a04cabfb4572345d3a2,
     type: 2}
   canonBulletSpawn: {fileID: 4238344933292008}
-  timeToShoot: 1
+  timeToShoot: 3
   healthPoints: 0
-  raycastMaxDistance: 10
 --- !u!212 &212210683127370714
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -366,7 +368,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: d434d1a8809bc2241812030ec4f9ee5b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -411,7 +413,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: fd86c51864e65e246b4ca81fdf705087, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -456,7 +458,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: af4b7efeb166c30459cb1d720f8f1bb8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

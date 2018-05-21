@@ -184,9 +184,9 @@ MonoBehaviour:
   machineGunBulletPrefab: {fileID: 1064873333868610, guid: 28902390501bda442aa68828ecc106d8,
     type: 2}
   machineGunBulletSpawn: {fileID: 4787636332801550}
-  FireRate: 1
-  lastfired: 1
+  timeToShoot: 1
   healthPoints: 0
+  wayPoints: []
 --- !u!114 &114435263675406934
 MonoBehaviour:
   m_ObjectHideFlags: 1

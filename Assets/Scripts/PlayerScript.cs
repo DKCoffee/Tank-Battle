@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using EZCameraShake;
 
 public class PlayerScript : MonoBehaviour
@@ -41,8 +42,10 @@ public class PlayerScript : MonoBehaviour
     private float CanonReloadTime = 3;
 
     [Header("Health Settings")]
-    public float healthPoints;
-    private float maxHealthPoints = 100;
+    private float maxHealthPoints = 200;
+    private float healthPoints;
+    private float percentageHealth = 100;
+    public Text lifeText;
 
     void Awake()
     {
@@ -54,6 +57,7 @@ public class PlayerScript : MonoBehaviour
         body.isKinematic = false;
         movementInputValue = 0f;
         turnInputValue = 0f;
+        SetLifeText();
     }
 
     void OnDisable()
@@ -68,6 +72,7 @@ public class PlayerScript : MonoBehaviour
         healthPoints = maxHealthPoints;
         currentMachineGunMunition = maxMachineGunMunition;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        SetLifeText();
     }
 
     void Update()
@@ -88,9 +93,8 @@ public class PlayerScript : MonoBehaviour
         turnInputValue = Input.GetAxis(turnAxisName);
         Turn();
         Move();
-        direction = emptyObject.position - transform.position;
-        var hit = Physics2D.Raycast(transform.forward, direction, 5f, 0);
-        //Debug.DrawRay(transform.forward, direction, Color.yellow, 0.1f);
+        TotalDamage();
+        SetLifeText();
         float calculateMunition = currentMachineGunMunition / maxMachineGunMunition;
         SetHealthBar(calculateMunition);
         if (currentMachineGunMunition <= 0)
@@ -119,6 +123,8 @@ public class PlayerScript : MonoBehaviour
         Destroy(Bullet, 2);
         CameraShaker.Instance.ShakeOnce(.5f, 1f, .1f, 1f);
         currentMachineGunMunition--;
+        AudioSource machineGunShoot = GetComponent<AudioSource>();
+        machineGunShoot.Play();
     }
 
     private void CanonShoot()
@@ -130,7 +136,8 @@ public class PlayerScript : MonoBehaviour
             Destroy(Bullet, 5);
             lastTimeShoot = Time.realtimeSinceStartup;
             CameraShaker.Instance.ShakeOnce(4f, 4f, .1f, 1f);
-            
+            AudioSource canonShoot = GetComponent<AudioSource>();
+            canonShoot.Play();
         }
     }
 
@@ -203,20 +210,28 @@ public class PlayerScript : MonoBehaviour
 
     }
 
+
     private void TotalDamage()
     {
         if(healthPoints <= 0)
         {
             healthPoints = 0;
-            SceneManager.LoadScene("LooseMenu");
+            SceneManager.LoadScene("Loose Scene");
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void SetLifeText()
     {
+        lifeText.text = percentageHealth.ToString("F0")+" %";
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {   
         if (collision.gameObject.tag == "EnemyTank")
         {
             healthPoints = healthPoints - 1;
+            percentageHealth = healthPoints / maxHealthPoints * 100;
+            SetLifeText();
             StartCoroutine(SmallDamage());
             CameraShaker.Instance.ShakeOnce(2f, 2f, .1f, 1f);
         }
@@ -224,6 +239,8 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.tag == "Tree")
         {
             healthPoints = healthPoints - 1;
+            percentageHealth = healthPoints / maxHealthPoints * 100;
+            SetLifeText();
             StartCoroutine(SmallDamage());
             CameraShaker.Instance.ShakeOnce(2f, 2f, .1f, 1f);
         }
@@ -234,6 +251,8 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.tag == "EnemyCanonBullet")
         {
             healthPoints = healthPoints - 25;
+            percentageHealth = healthPoints / maxHealthPoints * 100;
+            SetLifeText();
             StartCoroutine(HeavyDamage());
             Destroy(collision.gameObject);
             CameraShaker.Instance.ShakeOnce(5f, 5f, .1f, 1f);
@@ -241,10 +260,12 @@ public class PlayerScript : MonoBehaviour
 
         if (collision.gameObject.tag == "EnemyHelicopterBullet")
         {
-            healthPoints = healthPoints - 5;
-            StartCoroutine(HeavyDamage());
+            healthPoints = healthPoints - 1;
+            percentageHealth = healthPoints / maxHealthPoints * 100;
+            SetLifeText();
             Destroy(collision.gameObject);
             CameraShaker.Instance.ShakeOnce(.5f, .5f, .1f, 1f);
         }
-    }
+    }    
+
 }

@@ -13,8 +13,9 @@ public class EnemyTankScript : MonoBehaviour {
     private Vector3 startPosition;
     private Vector3 targetPosition;
     [SerializeField] public MapGenerator map_generator;
-    private float maximumSpawnDistance = 5;
     [SerializeField] int gridSizeX, gridSizeY;
+    [SerializeField] private GameObject TotalTank;
+    [SerializeField] private GameObject ExplosionMark;
 
 
     [Header("Canon Settings")]
@@ -33,15 +34,12 @@ public class EnemyTankScript : MonoBehaviour {
         PATROL,
         FOLLOW,
         ATTACK,
-        SEARCH,
         GO_BACK
     }
     private EnemyState enemyState = EnemyState.PATROL;
 
     private float distance;
     private Transform playerTransform;
-    private float originOffset = 0.5f;
-    public float raycastMaxDistance = 10f;
     private EnemyTourelleScript enemyTourelleScript;
 
     // Use this for initialization
@@ -52,13 +50,15 @@ public class EnemyTankScript : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
         enemyTourelleScript = FindObjectOfType<EnemyTourelleScript>();
         healthPoints = maxHealthPoints;
+        
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        AI();
         distance = Vector2.Distance(transform.position, playerTransform.transform.position);
-        if (distance <= 10)
+        if (healthPoints < maxHealthPoints)
         {
             enemyState = EnemyState.FOLLOW;
         }
@@ -104,13 +104,10 @@ public class EnemyTankScript : MonoBehaviour {
 
                 break;
             case EnemyState.FOLLOW:
-
+                Move();
                 break;
             case EnemyState.ATTACK:
-
-                break;
-            case EnemyState.SEARCH:
-
+                CanonShoot();
                 break;
             case EnemyState.GO_BACK:
 
@@ -122,10 +119,10 @@ public class EnemyTankScript : MonoBehaviour {
     {
         if (healthPoints <= 0)
         {
+            Destroy(TotalTank);
             healthPoints = 0;
-            GetComponent<SpriteRenderer>().color = Color.grey;
-            Destroy(GetComponent<BoxCollider>());
-            enemyTourelleScript.TotalDamage();
+            Instantiate(ExplosionMark, transform.position, Quaternion.identity);
+
         }
     }
 

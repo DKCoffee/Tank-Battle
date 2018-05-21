@@ -179,7 +179,7 @@ MonoBehaviour:
   seed: 10
   useRandomSeed: 1
   randomFillPercent: 35
-  floorTiles: {fileID: 1707387910434750, guid: f704b4abec090204296b8fa7d3168a9d, type: 2}
+  floorTiles: {fileID: 1028405045612432, guid: eae8e0ad9da5e1049b2c55dcb5511681, type: 2}
   TreeTiles: {fileID: 1919354996672940, guid: 3f766ba790d5bf04d98209f8b13c0267, type: 2}
   player: {fileID: 1054603228670178, guid: d84ed4629e1c1284386440666715042b, type: 2}
 --- !u!114 &285649657
@@ -195,9 +195,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTank: {fileID: 1070493426187782, guid: 8913b8369768ea1458315167190768f0, type: 2}
   helicopter: {fileID: 1528117001213414, guid: cd59a965a31e17643abd1fc05f5fec7e, type: 2}
+  tanksWaypoints: {fileID: 1361369626320938, guid: e02d594d2025efa43881814a004dc6e7,
+    type: 2}
+  helicopterWaypoints: {fileID: 1291805314579022, guid: 332616d47a245514e8c58d7bc625819b,
+    type: 2}
   grid: {fileID: 285649654}
   map_generator: {fileID: 285649656}
   player: {fileID: 4283491110221362, guid: d84ed4629e1c1284386440666715042b, type: 2}
+  tankWaypointsList: []
   gridSizeX: 20
   gridSizeY: 20
 --- !u!1 &470854615
@@ -253,7 +258,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -392,6 +397,25 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114174118625235490, guid: 285d6467408df494a8deebc7be78bc34,
+        type: 2}
+      propertyPath: m_FontData.m_FontSize
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 114174118625235490, guid: 285d6467408df494a8deebc7be78bc34,
+        type: 2}
+      propertyPath: m_FontData.m_MinSize
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114174118625235490, guid: 285d6467408df494a8deebc7be78bc34,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1037074805829068, guid: 285d6467408df494a8deebc7be78bc34, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 285d6467408df494a8deebc7be78bc34, type: 2}
   m_IsPrefabParent: 0
@@ -499,5 +523,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 4283491110221362, guid: d84ed4629e1c1284386440666715042b, type: 2}
-  offset: {x: 0, y: 0, z: -20}
+  offset: {x: 0, y: 0, z: -30}
   speed: 0.05

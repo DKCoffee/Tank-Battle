@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HelicopterScript : MonoBehaviour {
 
+    private Rigidbody2D body;
     [SerializeField] private GameObject propeller;
     private Transform playerTransform;
     [SerializeField] private float speed;
@@ -15,15 +16,16 @@ public class HelicopterScript : MonoBehaviour {
     public float machineGunBulletSpeed;
     public GameObject machineGunBulletPrefab;
     public Transform machineGunBulletSpawn;
-    public int FireRate;
-    public int lastfired;
+    private float lastTimeShoot;
+    public float timeToShoot;
 
     [Header("Health Settings")]
     public float healthPoints;
     private float maxHealthPoints = 50;
 
-
-    float roamRadius = 5;
+    [SerializeField] private Transform[] wayPoints;
+    private Transform nextPosition;
+    private float minimumValue = 0.1f;
 
     public enum EnemyState
     {
@@ -37,10 +39,11 @@ public class HelicopterScript : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        body = GetComponent<Rigidbody2D>();
         playerTransform = FindObjectOfType<PlayerScript>().transform;
         healthPoints = maxHealthPoints;
         startPosition = transform;
-	}
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -49,7 +52,11 @@ public class HelicopterScript : MonoBehaviour {
         propeller.transform.Rotate(0, 0, 2000 * Time.deltaTime);
         AI();
         distance = Vector2.Distance(transform.position, playerTransform.transform.position);
-        if(distance <= 5)
+        if (distance <= 10)
+        {
+            enemyState = EnemyState.FOLLOW;
+        }
+        if (distance <= 5)
         {
             enemyState = EnemyState.ATTACK;
         }
@@ -57,22 +64,14 @@ public class HelicopterScript : MonoBehaviour {
 
     private void MachineGunShoot()
     {
-        GameObject Snowball = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
-        Snowball.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
-        Destroy(Snowball, 2);
-    }
-
-    IEnumerator AutomaticShoot()
-    {
-        while (true)
+        if (Time.realtimeSinceStartup - lastTimeShoot > timeToShoot)
         {
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
-            MachineGunShoot();
-            yield return new WaitForSeconds(0.1f);
+            GameObject bullet = Instantiate(machineGunBulletPrefab, machineGunBulletSpawn.position, machineGunBulletSpawn.rotation);
+            bullet.GetComponent<Rigidbody2D>().velocity = machineGunBulletSpawn.up * machineGunBulletSpeed;
+            Destroy(bullet, 2);
+            lastTimeShoot = Time.realtimeSinceStartup;
         }
+
     }
 
     private void Move()
@@ -84,31 +83,12 @@ public class HelicopterScript : MonoBehaviour {
         transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
     }
 
-    private void turnAround()
-    {
-
-    }
-
-    void FreeRoam()
-    {
-        {
-            Vector3 randomDirection = Random.insideUnitSphere * roamRadius;
-            randomDirection += startPosition;
-
-            if (!renderer.bounds.Contains(randomDirection + transform.position))
-            {
-                randomDirection = -randomDirection; // if next point outside boundary, do a 180
-            }
-            randomDirection += transform.position;
-        }
-    }
-
     private void AI()
     {
         switch (enemyState)
         {
             case EnemyState.PATROL:
-
+                
                 break;
             case EnemyState.FOLLOW:
                 target = playerTransform;
@@ -116,11 +96,12 @@ public class HelicopterScript : MonoBehaviour {
                 break;
             case EnemyState.ATTACK:
                 target = playerTransform;
-                StartCoroutine("AutomaticShoot");
-                turnAround();
+                MachineGunShoot();
+
                 break;
             case EnemyState.GO_BACK:
                 target = startPosition;
+                Move();
                 break;
         }
     }
