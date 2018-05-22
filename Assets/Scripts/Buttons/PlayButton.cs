@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class PlayButton : MonoBehaviour {
 
     [SerializeField] public Button playButton;
+    public PauseMenu pauseMenu;
 
     // Use this for initialization
     void Start()
@@ -18,5 +19,6 @@ public class PlayButton : MonoBehaviour {
     void LoadGame()
     {
         SceneManager.LoadScene("Level 1");
+        Time.timeScale = 1f;
     }
 }

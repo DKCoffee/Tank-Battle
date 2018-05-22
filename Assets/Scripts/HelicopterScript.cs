@@ -26,6 +26,8 @@ public class HelicopterScript : MonoBehaviour {
     [SerializeField] private Transform[] wayPoints;
     private Transform nextPosition;
     private float minimumValue = 0.1f;
+    [SerializeField] private GameObject ExplosionMark;
+    private GameManager gameManager;
 
     public enum EnemyState
     {
@@ -41,6 +43,7 @@ public class HelicopterScript : MonoBehaviour {
     {
         body = GetComponent<Rigidbody2D>();
         playerTransform = FindObjectOfType<PlayerScript>().transform;
+        gameManager = FindObjectOfType<GameManager>();
         healthPoints = maxHealthPoints;
         startPosition = transform;
     }
@@ -48,17 +51,20 @@ public class HelicopterScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        //Debug.Log("helicopter " + healthPoints);
         propeller.transform.Rotate(0, 0, 2000 * Time.deltaTime);
         AI();
         distance = Vector2.Distance(transform.position, playerTransform.transform.position);
-        if (distance <= 10)
+        if (distance <= 15)
         {
             enemyState = EnemyState.FOLLOW;
         }
         if (distance <= 5)
         {
             enemyState = EnemyState.ATTACK;
+        }
+        if (distance >= 20)
+        {
+            enemyState = EnemyState.GO_BACK;
         }
     }
 
@@ -95,9 +101,7 @@ public class HelicopterScript : MonoBehaviour {
                 Move();
                 break;
             case EnemyState.ATTACK:
-                target = playerTransform;
                 MachineGunShoot();
-
                 break;
             case EnemyState.GO_BACK:
                 target = startPosition;
@@ -106,13 +110,28 @@ public class HelicopterScript : MonoBehaviour {
         }
     }
 
+    private IEnumerator SmallDamage()
+    {
+
+        yield return new WaitForSeconds(.1f);
+        for (int i = 0; i < 2; i++)
+        {
+            GetComponent<SpriteRenderer>().color = Color.clear;
+            yield return new WaitForSeconds(.1f);
+            GetComponent<SpriteRenderer>().color = Color.white;
+            yield return new WaitForSeconds(.1f);
+        }
+
+    }
+
     private void TotalDamage()
     {
         if (healthPoints <= 0)
         {
             healthPoints = 0;
+            Instantiate(ExplosionMark, transform.position, Quaternion.identity);
+            gameManager.deadEnnemies++;
             Destroy(gameObject);
-
         }
     }
 
@@ -129,6 +148,7 @@ public class HelicopterScript : MonoBehaviour {
         {
             healthPoints = healthPoints - 5;
             Destroy(collision.gameObject);
+            StartCoroutine(SmallDamage());
             TotalDamage();
         }
     }

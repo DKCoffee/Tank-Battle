@@ -11,11 +11,13 @@ public class Pathfinding : MonoBehaviour {
     private void Awake()
     {
         grid = GetComponent<Grid>();
+        TargetPosition = FindObjectOfType<PlayerScript>().transform;
     }
 
     private void Update()
     {
         FindPath(StartPosition.position, TargetPosition.position);
+        StartPosition = transform;
     }
 
     public void FindPath(Vector3 a_StartPos, Vector3 a_TargetPos)

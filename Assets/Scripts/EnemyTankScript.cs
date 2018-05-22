@@ -9,9 +9,8 @@ public class EnemyTankScript : MonoBehaviour {
     public float speed;
     public float turnSpeed;
     private SpriteRenderer spriteRenderer;
-    private Pathfinding pathfinding;
-    private Vector3 startPosition;
-    private Vector3 targetPosition;
+    private Transform target;
+    private Transform spawnPosition;
     [SerializeField] public MapGenerator map_generator;
     [SerializeField] int gridSizeX, gridSizeY;
     [SerializeField] private GameObject TotalTank;
@@ -29,6 +28,8 @@ public class EnemyTankScript : MonoBehaviour {
     public float healthPoints;
     private float maxHealthPoints = 100;
 
+    private bool getDamage = false;
+
     public enum EnemyState
     {
         PATROL,
@@ -41,6 +42,7 @@ public class EnemyTankScript : MonoBehaviour {
     private float distance;
     private Transform playerTransform;
     private EnemyTourelleScript enemyTourelleScript;
+    private GameManager gameManager;
 
     // Use this for initialization
     void Start ()
@@ -49,7 +51,9 @@ public class EnemyTankScript : MonoBehaviour {
         playerTransform = FindObjectOfType<PlayerScript>().transform;
         spriteRenderer = GetComponent<SpriteRenderer>();
         enemyTourelleScript = FindObjectOfType<EnemyTourelleScript>();
+        gameManager = FindObjectOfType<GameManager>();
         healthPoints = maxHealthPoints;
+        spawnPosition = transform;
         
     }
 	
@@ -58,24 +62,26 @@ public class EnemyTankScript : MonoBehaviour {
     {
         AI();
         distance = Vector2.Distance(transform.position, playerTransform.transform.position);
-        if (healthPoints < maxHealthPoints)
+        if (getDamage || distance <= 10)
         {
             enemyState = EnemyState.FOLLOW;
+
         }
-        if (distance <=5)
+        if (distance <= 5)
         {
             enemyState = EnemyState.ATTACK;
         }
-        var hit = Physics2D.Raycast(transform.position, transform.forward, 5f, 0);
-        //Debug.DrawRay(transform.position, transform.forward, Color.green, 0.1f);
+        if (distance >= 15)
+        {
+            enemyState = EnemyState.GO_BACK;
+        }
         TotalDamage();
-        Move();
     }
 
     private void Move()
     {
         transform.position += transform.up * speed * Time.deltaTime;
-        Vector3 dir = playerTransform.position - transform.position;
+        Vector3 dir = target.position - transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
     }
@@ -104,25 +110,57 @@ public class EnemyTankScript : MonoBehaviour {
 
                 break;
             case EnemyState.FOLLOW:
+                target = playerTransform;
                 Move();
                 break;
             case EnemyState.ATTACK:
                 CanonShoot();
                 break;
             case EnemyState.GO_BACK:
-
+                target = spawnPosition;
+                Move();
                 break;
         }
+    }
+
+    private IEnumerator HeavyDamage()
+    {
+
+        yield return new WaitForSeconds(.1f);
+        for (int i = 0; i < 3; i++)
+        {
+            GetComponent<SpriteRenderer>().color = Color.clear;
+            yield return new WaitForSeconds(.1f);
+            GetComponent<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(.1f);
+            GetComponent<SpriteRenderer>().color = Color.white;
+            yield return new WaitForSeconds(.1f);
+        }
+
+    }
+
+    private IEnumerator SmallDamage()
+    {
+
+        yield return new WaitForSeconds(.1f);
+        for (int i = 0; i < 2; i++)
+        {
+            GetComponent<SpriteRenderer>().color = Color.clear;
+            yield return new WaitForSeconds(.1f);
+            GetComponent<SpriteRenderer>().color = Color.white;
+            yield return new WaitForSeconds(.1f);
+        }
+
     }
 
     private void TotalDamage()
     {
         if (healthPoints <= 0)
         {
-            Destroy(TotalTank);
             healthPoints = 0;
             Instantiate(ExplosionMark, transform.position, Quaternion.identity);
-
+            gameManager.deadEnnemies+=1;
+            Destroy(TotalTank);
         }
     }
 
@@ -131,6 +169,7 @@ public class EnemyTankScript : MonoBehaviour {
         if (collision.gameObject.tag == "Player")
         {
             healthPoints = healthPoints - 1;
+            StartCoroutine(SmallDamage());
         }
     }
 
@@ -140,12 +179,16 @@ public class EnemyTankScript : MonoBehaviour {
         {
             healthPoints = healthPoints - 50;
             Destroy(collision.gameObject);
+            StartCoroutine(HeavyDamage());
+            getDamage = true;
         }
 
         if (collision.gameObject.tag == "PlayerMachineGunBullet")
         {
             healthPoints = healthPoints - 2;
             Destroy(collision.gameObject);
+            StartCoroutine(SmallDamage());
+            getDamage = true;
         }
     }
 }

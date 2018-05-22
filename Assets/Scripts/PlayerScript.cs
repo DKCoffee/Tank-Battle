@@ -30,7 +30,7 @@ public class PlayerScript : MonoBehaviour
     private float currentMachineGunMunition;
     private float machineGunReloadTime = 4;
     private bool isReloading = false;
-    public GameObject MunitionBar;
+    public Image munitionBar;
 
     [Header("Canon Settings")]
     public float canonBulletSpeed;
@@ -67,11 +67,14 @@ public class PlayerScript : MonoBehaviour
 
     void Start()
     {
+        
         movementAxisName = "Vertical";
         turnAxisName = "Horizontal";
         healthPoints = maxHealthPoints;
         currentMachineGunMunition = maxMachineGunMunition;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        lifeText = GameObject.Find("PourcentHealthPoints").GetComponent<Text>();
+        munitionBar = GameObject.Find("MachineGunMunition").GetComponent<Image>();
         SetLifeText();
     }
 
@@ -96,7 +99,7 @@ public class PlayerScript : MonoBehaviour
         TotalDamage();
         SetLifeText();
         float calculateMunition = currentMachineGunMunition / maxMachineGunMunition;
-        SetHealthBar(calculateMunition);
+        SetMunitionBar(calculateMunition);
         if (currentMachineGunMunition <= 0)
         {
             StartCoroutine(MachineGunReloading());
@@ -150,9 +153,9 @@ public class PlayerScript : MonoBehaviour
         
     }
 
-    public void SetHealthBar(float munition)
+    public void SetMunitionBar(float munition)
     {
-        MunitionBar.transform.localScale = new Vector3(munition, MunitionBar.transform.localScale.y, MunitionBar.transform.localScale.z);
+        munitionBar.transform.localScale = new Vector3(munition, munitionBar.transform.localScale.y, munitionBar.transform.localScale.z);
     }
 
     IEnumerator CanonReloading()

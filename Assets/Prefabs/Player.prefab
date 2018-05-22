@@ -287,7 +287,7 @@ Rigidbody2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1030306265346208}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -432,7 +432,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 4916539612293994}
-  emptyObject: {fileID: 4803439322876364}
 --- !u!114 &114656929044535696
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -453,13 +452,13 @@ MonoBehaviour:
   machineGunBulletSpawn: {fileID: 4766295692754480}
   FireRate: 1
   lastfired: 1
-  MunitionBar: {fileID: 1220812752734982, guid: 285d6467408df494a8deebc7be78bc34,
+  munitionBar: {fileID: 114419736565701590, guid: 285d6467408df494a8deebc7be78bc34,
     type: 2}
   canonBulletSpeed: 25
   canonBulletPrefab: {fileID: 1951736735431828, guid: b94f88eecc6100742a9f233f8ba93535,
     type: 2}
   canonBulletSpawn: {fileID: 4937877935354764}
-  timeToShoot: 5
+  timeToShoot: 2.5
   lifeText: {fileID: 114174118625235490, guid: 285d6467408df494a8deebc7be78bc34, type: 2}
 --- !u!212 &212348744401537908
 SpriteRenderer:

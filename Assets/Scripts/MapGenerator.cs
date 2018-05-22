@@ -90,7 +90,7 @@ public class MapGenerator : MonoBehaviour
                 //}
             }
         }
-        Instantiate(player, new Vector2(-width/2+1,-height/2+1), Quaternion.identity);
+        Instantiate(player, new Vector2(-8.5f,-13f), Quaternion.identity);
     }
 
 
